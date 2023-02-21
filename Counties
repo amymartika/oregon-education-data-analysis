@@ -17,3 +17,15 @@ order by percent_in_poverty desc;
 
 select corr(percent_in_poverty, county_ranking)
 from oregon_education.oregon_counties;
+
+-- It seems there are different factors influencing a county's education rankings. Let's join this data with the community colleges table.
+
+select
+    counties.county as county,
+    counties.county_ranking as education_ranking,
+    count(colleges.school) as number_of_community_colleges
+from oregon_education.oregon_counties as counties
+left join oregon_education.oregon_community_colleges as colleges
+on counties.county = colleges.county
+group by counties.county, counties.county_ranking
+order by education_ranking desc;
