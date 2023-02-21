@@ -1,0 +1,19 @@
+-- First, let's examine our data. 
+
+select * from oregon_education.oregon_counties
+order by county_ranking desc;
+
+-- Let's examine Oregon county stats and get a sense for any relationship between the county's education rankings and its poverty level.
+
+select 
+    county,
+    county_ranking,
+    concat(percent_in_poverty, '%') as poverty_percentage,
+    above_national_average
+from oregon_education.oregon_counties
+order by percent_in_poverty desc;
+
+-- Our first look doesn't cleary indicate any correlation between the two factors. What happens when we test this?
+
+select corr(percent_in_poverty, county_ranking)
+from oregon_education.oregon_counties;
