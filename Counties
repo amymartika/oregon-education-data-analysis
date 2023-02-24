@@ -18,7 +18,8 @@ order by percent_in_poverty desc;
 select corr(percent_in_poverty, county_ranking)
 from oregon_education.oregon_counties;
 
--- It seems there are different factors influencing a county's education rankings. Let's join this data with the community colleges table.
+-- Surprisingly, there is a negative correlation between the two factors, which suggests that there are other factors influencing a county's education rankings.
+-- Let's join this data with the community colleges table to start looking at the number of schools available in each county and how that might affect education ranking.
 
 select
     counties.county as county,
