@@ -13,12 +13,12 @@ select
 from oregon_education.oregon_counties
 order by percent_in_poverty desc;
 
--- Our first look doesn't cleary indicate any correlation between the two factors. What happens when we test this?
+-- Our first look seems to indicate some sort of correlation between the two factors. What happens when we test this?
 
 select corr(percent_in_poverty, county_ranking)
 from oregon_education.oregon_counties;
 
--- Surprisingly, there is a negative correlation between the two factors, which suggests that there are other factors influencing a county's education rankings.
+-- There is some correlation between the two factors, but it isn't as strong as expected. This suggests that there are other factors influencing a county's education rankings.
 -- Let's join this data with the community colleges table to start looking at the number of schools available in each county and how that might affect education ranking.
 
 select
@@ -29,4 +29,28 @@ from oregon_education.oregon_counties as counties
 left join oregon_education.oregon_community_colleges as colleges
 on counties.county = colleges.county
 group by counties.county, counties.county_ranking
-order by education_ranking desc;
+order by education_ranking;
+
+-- If we segmented the counties into three groups, what differences would we see in their demographics?
+
+select 
+    case
+        when county_ranking between 1 and 12 then 'Top-ranking county'
+        when county_ranking between 13 and 24 then 'Mid-ranking county'
+        when county_ranking between 25 and 36 then 'Bottom-ranking county'
+        else 'Missing information'
+    end as county_grouping,
+    round(avg(percent_highly_educated), 1) as highly_educated,
+    round(avg(percent_in_poverty), 1) as in_poverty,
+    round(avg(percent_white), 1) as white,
+    round(avg(percent_black), 1) as black,
+    round(avg(percent_american_indian), 1) as american_indian,
+    round(avg(percent_asian), 1) as asian_american,
+    round(avg(percent_native_hawaiian), 1) as hawaiian_pacific_islander,
+    round(avg(percent_latine), 1) as latine,
+    round(avg(percent_two_races), 1) as mixed_ethnicity
+from oregon_education.oregon_counties
+group by county_grouping;
+
+-- The top-ranking counties have a slightly lower poverty level than the other two groupings. 
+-- A first look suggests that the top-ranking counties have a larger Asian American population and a lower Native American / American Indian population than the middle- and bottom-ranking counties do.
