@@ -1,4 +1,5 @@
--- Let's look at the total course offerings for each community college in Oregon and consider the respective college's county rankings.
+-- Let's look at the total course offerings for each community college in Oregon 
+-- and consider the respective college's county rankings.
 
 select
     courses.institution,
@@ -13,7 +14,8 @@ on colleges.county = counties.county
 group by courses.institution, colleges.county, counties.county_ranking
 order by county_ranking;
 
--- What correlation exists between the total courses in a given county and that county's education ranking?
+-- What correlation exists between the total courses in a given county 
+-- and that county's education ranking?
 
 select
     corr("total_courses", "county_ranking")
@@ -31,7 +33,8 @@ from(
     group by courses.institution, colleges.county, counties.county_ranking
 ) as a
 
--- Let's look at the community college in the lowest-ranking county from this list. What does its course breakdown look like?
+-- Let's look at the community college in the lowest-ranking county from this list. 
+-- What does its course breakdown look like?
 
 select 
     courses.activity_code,
@@ -45,7 +48,9 @@ where courses.institution = 'Treasure Valley Community College'
 group by courses.activity_code, codes.title
 order by number_of_courses desc;
 
--- What happens when we compare the course breakdown for the community college from the lowest-ranking county to the course breakdown for the community colleges from the highest-ranking county?
+-- What happens when we compare the course breakdown for the community college 
+-- from the lowest-ranking county to the course breakdown for the community colleges 
+-- from the highest-ranking county?
 
 select 
     courses.activity_code,
