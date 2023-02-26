@@ -13,13 +13,16 @@ select
 from oregon_education.oregon_counties
 order by percent_in_poverty desc;
 
--- Our first look seems to indicate some sort of correlation between the two factors. What happens when we test this?
+-- Our first look seems to indicate some sort of correlation between the two factors. 
+-- What happens when we test this?
 
 select corr(percent_in_poverty, county_ranking)
 from oregon_education.oregon_counties;
 
--- There is some correlation between the two factors, but it isn't as strong as expected. This suggests that there are other factors influencing a county's education rankings.
--- Let's join this data with the community colleges table to start looking at the number of schools available in each county and how that might affect education ranking.
+-- There is some correlation between the two factors, but it isn't as strong as expected. 
+-- This suggests that there are other factors influencing a county's education rankings.
+-- Let's join this data with the community colleges table to start looking at the number 
+-- of schools available in each county and how that might affect education ranking.
 
 select
     counties.county as county,
@@ -53,4 +56,5 @@ from oregon_education.oregon_counties
 group by county_grouping;
 
 -- The top-ranking counties have a slightly lower poverty level than the other two groupings. 
--- A first look suggests that the top-ranking counties have a larger Asian American population and a lower Native American / American Indian population than the middle- and bottom-ranking counties do.
+-- A first look suggests that the top-ranking counties have a larger Asian American population 
+-- and a lower Native American / American Indian population than the middle- and bottom-ranking counties do.
