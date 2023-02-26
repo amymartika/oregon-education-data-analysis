@@ -30,3 +30,33 @@ from(
     on colleges.county = counties.county
     group by courses.institution, colleges.county, counties.county_ranking
 ) as a
+
+-- Let's look at the community college in the lowest-ranking county from this list. What does its course breakdown look like?
+
+select 
+    courses.activity_code,
+    count(courses.title) as number_of_courses,
+    codes.title
+from oregon_education.course_listings as courses
+left join oregon_education.activity_codes as codes
+on courses.activity_code = codes.activity_code
+where courses.institution = 'Treasure Valley Community College'
+    and courses.activity_code is not null
+group by courses.activity_code, codes.title
+order by number_of_courses desc;
+
+-- What happens when we compare the course breakdown for the community college from the lowest-ranking county to the course breakdown for the community colleges from the highest-ranking county?
+
+select 
+    courses.activity_code,
+    count(courses.title) as number_of_courses,
+    codes.title
+from oregon_education.course_listings as courses
+left join oregon_education.activity_codes as codes
+on courses.activity_code = codes.activity_code
+left join oregon_education.oregon_community_colleges as colleges
+on courses.institution = colleges.school
+where colleges.county = 'Multnomah'
+    and codes.activity_code is not null
+group by courses.activitY_code, codes.title
+order by number_of_courses desc;
