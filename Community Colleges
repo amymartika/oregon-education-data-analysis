@@ -1,0 +1,32 @@
+-- Let's look at the total course offerings for each community college in Oregon and consider the respective college's county rankings.
+
+select
+    courses.institution,
+    count(courses.title) as total_courses,
+    colleges.county,
+    counties.county_ranking
+from oregon_education.oregon_community_colleges as colleges
+inner join oregon_education.course_listings as courses
+on colleges.school = courses.institution
+inner join oregon_education.oregon_counties as counties
+on colleges.county = counties.county
+group by courses.institution, colleges.county, counties.county_ranking
+order by county_ranking;
+
+-- What correlation exists between the total courses in a given county and that county's education ranking?
+
+select
+    corr("total_courses", "county_ranking")
+from(
+    select
+        courses.institution,
+        count(courses.title) as total_courses,
+        colleges.county,
+        counties.county_ranking
+    from oregon_education.oregon_community_colleges as colleges
+    inner join oregon_education.course_listings as courses
+    on colleges.school = courses.institution
+    inner join oregon_education.oregon_counties as counties
+    on colleges.county = counties.county
+    group by courses.institution, colleges.county, counties.county_ranking
+) as a
