@@ -63,5 +63,5 @@ left join oregon_education.oregon_community_colleges as colleges
 on courses.institution = colleges.school
 where colleges.county = 'Multnomah'
     and codes.activity_code is not null
-group by courses.activitY_code, codes.title
+group by courses.activity_code, codes.title
 order by number_of_courses desc;
