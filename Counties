@@ -3,7 +3,8 @@
 select * from oregon_education.oregon_counties
 order by county_ranking desc;
 
--- Let's examine Oregon county stats and get a sense for any relationship between the county's education rankings and its poverty level.
+-- Let's examine Oregon county stats and get a sense for any relationship between the 
+-- county's education rankings and its poverty level.
 
 select 
     county,
@@ -34,7 +35,8 @@ on counties.county = colleges.county
 group by counties.county, counties.county_ranking
 order by education_ranking;
 
--- If we segmented the counties into three groups, what differences would we see in their demographics?
+-- If we segmented the counties into three groups, what differences would we see 
+-- in their demographics?
 
 select 
     case
