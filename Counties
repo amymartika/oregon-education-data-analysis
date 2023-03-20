@@ -60,3 +60,39 @@ group by county_grouping;
 -- The top-ranking counties have a slightly lower poverty level than the other two groupings. 
 -- A first look suggests that the top-ranking counties have a larger Asian American population 
 -- and a lower Native American / American Indian population than the middle- and bottom-ranking counties do.
+
+-- What is Oregon's total population? 
+
+select
+    sum(county_population)
+from oregon_education.oregon_community_colleges;
+
+-- The total population is 4,715,664.
+-- According to the data for associate degrees, certificates, and OTMs issued
+-- between 2007 and 2018, Oregon is predicted to issue 268,466 new degrees,
+-- certificates, and OTMs between 2019 and 2030. 
+-- With a goal of 300,000 issued by 2030, the gap that needs to be bridged
+-- is 31,543.
+-- Let's break down Oregon's total population across counties.
+
+select
+    distinct county,
+    county_population,
+    round(((county_population / 4715664) * 100), 2) as percent_population
+from oregon_education.oregon_community_colleges;
+
+-- And look at how many degrees, certificates, and OTMs need to be issued per county.
+
+select
+    *,
+    round(((percent_population * 31543) / 100)) as needed_awards
+from (
+select
+    distinct county,
+    county_population,
+    round(((county_population / 4715664) * 100), 2) as percent_population
+from oregon_education.oregon_community_colleges) t
+order by needed_awards desc;
+
+-- How does the even distribution of needed awards compare to the current
+-- respective county rankings? 
