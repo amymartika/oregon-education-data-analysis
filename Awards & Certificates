@@ -1,0 +1,35 @@
+-- What were the total awarded associate degrees, certificates,
+-- and OTMs for academic years ending in 2006 through 2018?
+
+select 
+    academic_year_ending,
+    associate_degrees,
+    certificates_and_otms,
+    (associate_degrees + certificates_and_otms) as total_awards
+from oregon_education.awards_certificates
+where academic_year_ending < 2019;
+
+-- What is the percent change in total degrees and certificates
+-- awarded for each year?
+
+with total_awards_lag as (
+select
+    academic_year_ending, 
+    total_awards, 
+    lag(total_awards) over (
+        order by academic_year_ending) as previous_year_awards
+from (
+    select 
+    academic_year_ending,
+    (associate_degrees + certificates_and_otms) as total_awards
+    from oregon_education.awards_certificates
+    where academic_year_ending < 2019
+) t
+)
+select
+*, 
+round(((total_awards - previous_year_awards) / previous_year_awards) * 100, 2) as percent_change
+from total_awards_lag;
+
+-- The average percent change across years ending in 2007 
+-- through 2018 is 6.40%. 
