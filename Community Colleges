@@ -65,3 +65,43 @@ where colleges.county = 'Multnomah'
     and codes.activity_code is not null
 group by courses.activity_code, codes.title
 order by number_of_courses desc;
+
+-- Based on data from the Counties table, we're drilling down Marion, Linn,
+-- and Douglas counties.
+-- Let's start with their respective community colleges. 
+
+select 
+    school,
+    county
+from oregon_education.oregon_community_colleges
+where county = 'Marion'
+    or second_location_county = 'Marion'
+    or third_location_county = 'Marion'
+    or fourth_location_county = 'Marion'
+    or fifth_location_county = 'Marion';
+    
+-- Marion county has 1 community college: Chemeketa Community College.
+
+select 
+    school,
+    county
+from oregon_education.oregon_community_colleges
+where county = 'Linn'
+    or second_location_county = 'Linn'
+    or third_location_county = 'Linn'
+    or fourth_location_county = 'Linn'
+    or fifth_location_county = 'Linn';
+    
+-- Linn county has 1 community college: Linn-Benton Community College.
+
+select 
+    school,
+    county
+from oregon_education.oregon_community_colleges
+where county = 'Douglas'
+    or second_location_county = 'Douglas'
+    or third_location_county = 'Douglas'
+    or fourth_location_county = 'Douglas'
+    or fifth_location_county = 'Douglas';
+    
+-- Douglas county has 1 community college: Umpqua Community College.
