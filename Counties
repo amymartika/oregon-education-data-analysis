@@ -64,10 +64,10 @@ group by county_grouping;
 -- What is Oregon's total population? 
 
 select
-    sum(county_population)
-from oregon_education.oregon_community_colleges;
+    sum(population)
+from oregon_education.oregon_counties;
 
--- The total population is 4,715,664.
+-- The total population is 4,207,177.
 -- According to the data for associate degrees, certificates, and OTMs issued
 -- between 2007 and 2018, Oregon is predicted to issue 268,466 new degrees,
 -- certificates, and OTMs between 2019 and 2030. 
@@ -76,10 +76,10 @@ from oregon_education.oregon_community_colleges;
 -- Let's break down Oregon's total population across counties.
 
 select
-    distinct county,
-    county_population,
-    round(((county_population / 4715664) * 100), 2) as percent_population
-from oregon_education.oregon_community_colleges;
+    county,
+    population,
+    round(((population / 4207177) * 100), 2) as percent_population
+from oregon_education.oregon_counties;
 
 -- And look at how many degrees, certificates, and OTMs need to be issued per county.
 
@@ -88,11 +88,37 @@ select
     round(((percent_population * 31543) / 100)) as needed_awards
 from (
 select
-    distinct county,
-    county_population,
-    round(((county_population / 4715664) * 100), 2) as percent_population
-from oregon_education.oregon_community_colleges) t
+    county,
+    population,
+    round(((population / 4207177) * 100), 2) as percent_population
+from oregon_education.oregon_counties) t
 order by needed_awards desc;
 
 -- How does the even distribution of needed awards compare to the current
 -- respective county rankings? 
+
+select
+    county,
+    percent_population,
+    round(((percent_population * 31543) / 100)) as needed_awards,
+    case
+        when county_ranking between 1 and 12 then 'Top-ranking county'
+        when county_ranking between 13 and 24 then 'Mid-ranking county'
+        when county_ranking between 25 and 36 then 'Bottom-ranking county'
+        else 'Missing information'
+    end as county_grouping
+from (
+select
+    county,
+    county_ranking,
+    population,
+    round(((population / 4715664) * 100), 2) as percent_population
+from oregon_education.oregon_counties) t
+order by needed_awards desc;
+
+-- Let's start by drilling down Marion, Linn, and Douglas counties
+-- because they rank #5, #8, and #9, respectively, for additional
+-- needed awards by 2030, but they're placed in the mid-ranking and 
+-- bottom-ranking county groups by education levels.
+-- Combined, these counties account for 3,896, or 12.35%, of the 
+-- needed 31,543 additional degrees, certificates, and OTMs. 
