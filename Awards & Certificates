@@ -1,5 +1,5 @@
 -- What were the total awarded associate degrees, certificates,
--- and OTMs for academic years ending in 2006 through 2018?
+-- and OTMs for academic years ending in 2007 through 2018?
 
 select 
     academic_year_ending,
