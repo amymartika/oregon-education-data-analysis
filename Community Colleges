@@ -80,7 +80,7 @@ where county = 'Marion'
     or fourth_location_county = 'Marion'
     or fifth_location_county = 'Marion';
     
--- Marion county has 1 community college: Chemeketa Community College.
+-- Marion County has 1 community college: Chemeketa Community College.
 
 select 
     school,
@@ -92,7 +92,7 @@ where county = 'Linn'
     or fourth_location_county = 'Linn'
     or fifth_location_county = 'Linn';
     
--- Linn county has 1 community college: Linn-Benton Community College.
+-- Linn County has 1 community college: Linn-Benton Community College.
 
 select 
     school,
@@ -104,4 +104,61 @@ where county = 'Douglas'
     or fourth_location_county = 'Douglas'
     or fifth_location_county = 'Douglas';
     
--- Douglas county has 1 community college: Umpqua Community College.
+-- Douglas County has 1 community college: Umpqua Community College.
+
+-- What is the distribution of course offerings at Chemeketa Community
+-- College (located in Marion County)?
+
+select 
+    courses.institution, 
+    courses.activity_code,
+    count(courses.activity_code) as total,
+    codes.title
+from oregon_education.course_listings as courses
+left join oregon_education.activity_codes as codes
+on courses.activity_code = codes.activity_code
+where courses.institution = 'Chemeketa Community College'
+group by courses.institution, courses.activity_code, codes.title
+order by count(courses.activity_code) desc;
+
+-- How many of the courses offered through Chemeketa Community College
+-- actively work toward the adult education goals set by the state? 
+
+select 
+    courses.activity_code,
+    count(courses.activity_code) as total,
+    case
+        when codes.activity_code = 100
+            or codes.activity_code = 310
+            or codes.activity_code = 320
+            or codes.activity_code = 330
+            or codes.activity_code = 340
+            or codes.activity_code = 350
+            or codes.activity_code = 351
+            or codes.activity_code = 352
+            or codes.activity_code = 360
+            or codes.activity_code = 361
+            or codes.activity_code = 362
+            or codes.activity_code = 363
+            or codes.activity_code = 510
+            or codes.activity_code = 511
+            or codes.activity_code = 512
+            or codes.activity_code = 513 then 'No'
+        when codes.activity_code = 210
+            or codes.activity_code = 211
+            or codes.activity_code = 220
+            or codes.activity_code = 230 then 'Yes'
+    else 'No course data'
+    end qualifies_toward_goal
+from oregon_education.course_listings as courses
+left join oregon_education.activity_codes as codes
+on courses.activity_code = codes.activity_code
+where courses.institution = 'Chemeketa Community College'
+group by courses.activity_code, codes.activity_code
+order by count(courses.activity_code) desc;
+
+-- Of the 2,930 total courses offered at Chemeketa Community College,
+-- 1,613 (55.0%) actively work toward the adult education
+-- attainment goals set by the state. 
+-- This is in the county that ranks #5 in the state for the most
+-- additional adult education awards needed by 2030.
